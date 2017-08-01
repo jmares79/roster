@@ -13,7 +13,6 @@ class CommonLeagueGenerator implements LeagueGeneratorInterface
     protected $generator;
     protected $starters = array();
     protected $substitutes = array();
-    protected $substitutes = array();
 
     public function __construct(CommonBotGenerator $generator)
     {

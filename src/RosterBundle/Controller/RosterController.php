@@ -7,17 +7,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use RosterBundle\Exception\LeagueGenerationException;
+use RosterBundle\Exception\InvalidBotGenerationException;
 use RosterBundle\Service\CommonLeagueGenerator;
+use RosterBundle\Service\CommonBotGenerator;
 
 class RosterController extends Controller
 {
     /**
-     * @Route("/bots")
+     * @Route("/bot/{id}", name="get_bot")
      * @Method({"GET"})
      */
-    public function getBotsAction()
+    public function getBotAction(Request $request, $id)
     {
-        die('HERE');
+        die('BOT GET');
     }
 
     /**
@@ -27,7 +31,33 @@ class RosterController extends Controller
      */
     public function newLeagueAction(Request $request, CommonLeagueGenerator $generator)
     {
-        var_dump($generator);
-        die('NEW BOT');
+        try {
+            $league = $generator->generateLeague();
+
+            return new JsonResponse($league, Response::HTTP_CREATED);
+        } catch (LeagueGenerationException $e) {
+            return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @Route("/bot")
+     * @Method({"POST"})
+     */
+    public function newBotAction(Request $request, CommonBotGenerator $generator)
+    {
+        try {
+            $bot = $generator->generate();
+            $response = new JsonResponse();
+
+            $response->setStatusCode(Response::HTTP_CREATED);
+            $response->headers->set('Location',
+                $this->generateUrl('get_bot', array('id' => $bot->getId()), true)
+            );
+
+            return $response;
+        } catch (InvalidBotGenerationException $e) {
+            return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
+        }
     }
 }
