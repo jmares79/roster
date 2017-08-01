@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use RosterBundle\Exception\LeagueGenerationException;
 use RosterBundle\Exception\InvalidBotGenerationException;
 use RosterBundle\Service\CommonLeagueGenerator;
+use RosterBundle\Service\CommonTeamGenerator;
 use RosterBundle\Service\CommonBotGenerator;
 
 class RosterController extends Controller
@@ -22,22 +23,6 @@ class RosterController extends Controller
     public function getBotAction(Request $request, $id)
     {
         die('BOT GET');
-    }
-
-    /**
-     * Generates a new valid league, that consists of 10 starters and 5 substitutes
-     * @Route("/league")
-     * @Method({"POST"})
-     */
-    public function newLeagueAction(Request $request, CommonLeagueGenerator $generator)
-    {
-        try {
-            $league = $generator->generateLeague();
-
-            return new JsonResponse($league, Response::HTTP_CREATED);
-        } catch (LeagueGenerationException $e) {
-            return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
-        }
     }
 
     /**
@@ -60,4 +45,53 @@ class RosterController extends Controller
             return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
         }
     }
+
+    /**
+     * @Route("/league/{id}", name="get_league")
+     * @Method({"GET"})
+     */
+    public function getLeagueAction(Request $request, $id)
+    {
+        die('LEAGUE GET');
+    }
+
+    /**
+     * Generates a new valid league, that will be neccesary to hold a team
+     * @Route("/league")
+     * @Method({"POST"})
+     */
+    public function newLeagueAction(Request $request, CommonLeagueGenerator $generator)
+    {
+        try {
+            $league = $generator->generateLeague();
+            $response = new JsonResponse();
+
+            $response->setStatusCode(Response::HTTP_CREATED);
+            $response->headers->set('Location',
+                $this->generateUrl('get_league', array('id' => $league->getId()), true)
+            );
+
+            return $response;
+        } catch (LeagueGenerationException $e) {
+            return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Generates a new valid team, that consists of 10 starters and 5 substitutes
+     * @Route("/team/{leagueId}")
+     * @Method({"POST"})
+     */
+    // public function newTeamAction(Request $request, $leagueId, CommonTeamGenerator $generator)
+    // {
+    //     if (null == $leagueId) { return new JsonResponse(array(), Response::HTTP_BAD_REQUEST); }
+
+    //     try {
+    //         $team = $generator->generateTeam($leagueId);
+
+    //         return new JsonResponse($league, Response::HTTP_CREATED);
+    //     } catch (LeagueGenerationException $e) {
+    //         return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
+    //     }
+    // }
 }

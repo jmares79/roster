@@ -2,35 +2,34 @@
 
 namespace RosterBundle\Service;
 
+use Doctrine\ORM\EntityManager;
 use RosterBundle\Interfaces\LeagueGeneratorInterface;
 use RosterBundle\Service\CommonBotGenerator;
+use RosterBundle\Entity\League;
 
 class CommonLeagueGenerator implements LeagueGeneratorInterface
 {
     const STARTERS_AMOUNT = 10;
     const SUBSTITUTES_AMOUNT = 5;
     const MAX_TEAM_SALARY = 175;
-    protected $generator;
     protected $starters = array();
     protected $substitutes = array();
+    protected $em;
 
-    public function __construct(CommonBotGenerator $generator)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->generator = $generator;
+        $this->em = $entityManager;
     }
 
     public function generateLeague()
     {
+        $league = new League();
 
-    }
+        $league->setSalary(0);
 
-    protected function calculateTotalScore()
-    {
+        $this->em->persist($league);
+        $this->em->flush($league);
 
-    }
-
-    protected function isValid()
-    {
-
+        return $league;
     }
 }

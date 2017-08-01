@@ -4,6 +4,7 @@ namespace RosterBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use RosterBundle\Entity\League;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,6 +25,12 @@ class Bot
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="League", inversedBy="bots")
+     * @ORM\JoinColumn(name="league_id", referencedColumnName="id")
+     */
+    private $league;
 
     /**
      * @var string
@@ -60,6 +67,12 @@ class Bot
      */
     private $totalScore;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string")
+     */
+    private $type;
 
     /**
      * Get id
@@ -189,6 +202,50 @@ class Bot
     public function getTotalScore()
     {
         return $this->totalScore;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Bot
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set league
+     *
+     * @return Bot
+     */
+    public function setLeague($league)
+    {
+        $this->league = $league;
+
+        return $this;
+    }
+
+    /**
+     * Get league
+     *
+     * @return string
+     */
+    public function getLeague()
+    {
+        return $this->league;
     }
 }
 
