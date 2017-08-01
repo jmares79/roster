@@ -2,6 +2,8 @@
 
 namespace RosterBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="bot")
  * @ORM\Entity(repositoryClass="RosterBundle\Repository\BotRepository")
+ * @UniqueEntity("totalScore")
+ * @UniqueEntity("name")
  */
 class Bot
 {
