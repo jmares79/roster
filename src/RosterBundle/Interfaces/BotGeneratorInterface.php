@@ -3,5 +3,5 @@ namespace RosterBundle\Interfaces;
 
 interface BotGeneratorInterface
 {
-    public function generate();
+    public function generate($type);
 }

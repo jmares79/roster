@@ -19,12 +19,13 @@ class CommonBotGenerator implements BotGeneratorInterface
         $this->em = $entityManager;
     }
 
-    public function generate()
+    public function generate($type = null)
     {
         $bot = new Bot();
 
         $bot = $this->generateAttributes($bot);
         $bot = $this->generateName($bot);
+        $bot->setType($type);
 
         if (!$this->isValid($bot)) { throw new InvalidBotGenerationException(); }
 

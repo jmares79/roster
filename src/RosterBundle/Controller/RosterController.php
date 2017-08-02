@@ -13,6 +13,7 @@ use RosterBundle\Exception\InvalidBotGenerationException;
 use RosterBundle\Service\CommonLeagueGenerator;
 use RosterBundle\Service\CommonTeamGenerator;
 use RosterBundle\Service\CommonBotGenerator;
+use RosterBundle\Entity\League;
 
 class RosterController extends Controller
 {
@@ -86,10 +87,15 @@ class RosterController extends Controller
     // {
     //     if (null == $leagueId) { return new JsonResponse(array(), Response::HTTP_BAD_REQUEST); }
 
-    //     try {
-    //         $team = $generator->generateTeam($leagueId);
+    //     $repository = $this->getDoctrine()->getRepository(League::class);
+    //     $league = $repository->findOneById($leagueId);
 
-    //         return new JsonResponse($league, Response::HTTP_CREATED);
+    //     if (null == $league) { return new JsonResponse(array(), Response::HTTP_NOT_FOUND); }
+
+    //     try {
+    //         $team = $generator->generateTeam($league);
+
+    //         return new JsonResponse($team, Response::HTTP_CREATED);
     //     } catch (LeagueGenerationException $e) {
     //         return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
     //     }

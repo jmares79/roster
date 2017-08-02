@@ -72,5 +72,15 @@ class League
     {
         return $this->salary;
     }
+
+    public function getBots()
+    {
+        return $this->bots;
+    }
+
+    public function addBot(Bot $bot)
+    {
+        $this->bots->add($bot);
+    }
 }
 
