@@ -5,11 +5,13 @@ namespace RosterBundle\Service;
 use Doctrine\ORM\EntityManager;
 use RosterBundle\Exception\InvalidBotGenerationException;
 use RosterBundle\Interfaces\BotGeneratorInterface;
+use RosterBundle\Entity\League;
 use RosterBundle\Entity\Bot;
 
 class CommonBotGenerator implements BotGeneratorInterface
 {
     const MAX_TOTAL_SCORE = 100;
+    const LEAGUE_NULL = "League must not be null";
     protected $attributes = array('speed', 'strength', 'agility');
     protected $bot;
     protected $em;
@@ -19,20 +21,18 @@ class CommonBotGenerator implements BotGeneratorInterface
         $this->em = $entityManager;
     }
 
-    public function generate($type = null)
+    public function generate(League $league, $type = null)
     {
+        if (null == $league) { throw new InvalidBotGenerationException(self::LEAGUE_NULL); }
+
         $bot = new Bot();
 
         $bot = $this->generateAttributes($bot);
         $bot = $this->generateName($bot);
         $bot->setType($type);
-
-        if (!$this->isValid($bot)) { throw new InvalidBotGenerationException(); }
+        $bot->setLeague($league);
 
         $this->em->persist($bot);
-        $this->em->flush($bot);
-
-        return $bot;
     }
 
     protected function generateAttributes(Bot $bot)
@@ -45,7 +45,12 @@ class CommonBotGenerator implements BotGeneratorInterface
             $setAttribute = "set".ucfirst($attribute);
             $getAttribute = "get".ucfirst($attribute);
 
-            $value = rand(1, $remaining);
+            if ($remaining > 1) {
+                $value = rand(1, $remaining);
+            } else {
+                $value = 0;
+            }
+
             $bot->$setAttribute($value);
 
             $totalScore += $value;

@@ -27,13 +27,20 @@ class RosterController extends Controller
     }
 
     /**
-     * @Route("/bot")
+     * @Route("/bot/{leagueId}")
      * @Method({"POST"})
      */
-    public function newBotAction(Request $request, CommonBotGenerator $generator)
+    public function newBotAction(Request $request, CommonBotGenerator $generator, $leagueId)
     {
+        if (null == $leagueId) { return new JsonResponse(array(), Response::HTTP_BAD_REQUEST); }
+
+        $repository = $this->getDoctrine()->getRepository(League::class);
+        $league = $repository->findOneById($leagueId);
+
+        if (null == $league) { return new JsonResponse(array(), Response::HTTP_NOT_FOUND); }
+
         try {
-            $bot = $generator->generate();
+            $bot = $generator->generate($league);
             $response = new JsonResponse();
 
             $response->setStatusCode(Response::HTTP_CREATED);
@@ -65,9 +72,10 @@ class RosterController extends Controller
     {
         try {
             $league = $generator->generateLeague();
-            $response = new JsonResponse();
 
+            $response = new JsonResponse();
             $response->setStatusCode(Response::HTTP_CREATED);
+
             $response->headers->set('Location',
                 $this->generateUrl('get_league', array('id' => $league->getId()), true)
             );
@@ -77,27 +85,4 @@ class RosterController extends Controller
             return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
         }
     }
-
-    /**
-     * Generates a new valid team, that consists of 10 starters and 5 substitutes
-     * @Route("/team/{leagueId}")
-     * @Method({"POST"})
-     */
-    // public function newTeamAction(Request $request, $leagueId, CommonTeamGenerator $generator)
-    // {
-    //     if (null == $leagueId) { return new JsonResponse(array(), Response::HTTP_BAD_REQUEST); }
-
-    //     $repository = $this->getDoctrine()->getRepository(League::class);
-    //     $league = $repository->findOneById($leagueId);
-
-    //     if (null == $league) { return new JsonResponse(array(), Response::HTTP_NOT_FOUND); }
-
-    //     try {
-    //         $team = $generator->generateTeam($league);
-
-    //         return new JsonResponse($team, Response::HTTP_CREATED);
-    //     } catch (LeagueGenerationException $e) {
-    //         return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
-    //     }
-    // }
 }

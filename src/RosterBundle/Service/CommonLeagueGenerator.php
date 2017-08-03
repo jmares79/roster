@@ -16,7 +16,7 @@ class CommonLeagueGenerator implements LeagueGeneratorInterface
     const ST = 'starter';
     const SUB = 'substitute';
 
-    protected $team = array();
+    protected $league;
     protected $generator;
     protected $em;
 
@@ -28,45 +28,33 @@ class CommonLeagueGenerator implements LeagueGeneratorInterface
 
     public function generateLeague()
     {
-        $league = new League();
-        $league->setSalary(0);
+        $this->league = new League();
+        $this->league->setSalary(0);
 
-        $league = $this->generateTeam($league);
+        $this->generateTeam();
 
+        $this->em->persist($this->league);
+        $this->em->flush();
 
-        $this->em->persist($league);
-        $this->em->flush($league);
-
-        return $league;
+        return $this->league;
     }
 
-    protected function generateTeam(League $league)
+    protected function generateTeam()
     {
-        echo "<pre>"; var_dump($league); echo "</pre>";
-        $this->generateBotByType($league, self::ST);
-        $this->generateBotByType($league, self::SUB);
+        $this->generateBotByType(self::ST);
+        $this->generateBotByType(self::SUB);
     }
 
-    protected function generateBotByType(League $league, $type)
+    protected function generateBotByType($type)
     {
-        $bot = $this->generator->generate($type);
+        $capacity = $type == self::ST ? self::STARTERS_AMOUNT : self::SUBSTITUTES_AMOUNT;
 
-        while ($this->isValid($league, $bot) && $this->teamIsFull($league, $type)) {
-            $bot = $this->generator->generate($type);
-            $bot->setType($type);
-
-            $league->addBot($bot);
+        for ($i = 0; $i < $capacity; $i++) {
+            $this->generator->generate($this->league, $type);
         }
-
-        return $league;
     }
 
-    protected function teamIsFull(League $league, $type)
-    {
-        return true;
-    }
-
-    protected function isValid(League $league, Bot $bot)
+    protected function isValid(Bot $bot)
     {
         return true;
     }

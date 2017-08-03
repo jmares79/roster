@@ -73,9 +73,15 @@ class League
         return $this->salary;
     }
 
-    public function getBots()
+    public function getBots($type = null)
     {
-        return $this->bots;
+        if (null == $type) {
+            return $this->bots;
+        } else {
+            return $this->bots->filter(function($bot) use ($type) {
+                return $bot->getType() == $type;
+            });
+        }
     }
 
     public function addBot(Bot $bot)
@@ -83,4 +89,3 @@ class League
         $this->bots->add($bot);
     }
 }
-
