@@ -17,12 +17,12 @@ class CommonLeagueGenerator implements LeagueGeneratorInterface
     const SUB = 'substitute';
 
     protected $league;
-    protected $generator;
+    protected $botGenerator;
     protected $em;
 
     public function __construct(CommonBotGenerator $generator, EntityManager $entityManager)
     {
-        $this->generator = $generator;
+        $this->botGenerator = $generator;
         $this->em = $entityManager;
     }
 
@@ -48,14 +48,26 @@ class CommonLeagueGenerator implements LeagueGeneratorInterface
     protected function generateBotByType($type)
     {
         $capacity = $type == self::ST ? self::STARTERS_AMOUNT : self::SUBSTITUTES_AMOUNT;
+        $amount = 0;
 
-        for ($i = 0; $i < $capacity; $i++) {
-            $this->generator->generate($this->league, $type);
+        $bot = $this->botGenerator->generate($this->league, $type);
+
+        while ($this->isValidLeague($bot) && $amount < $capacity) {
+            $this->em->persist($bot);
+            $this->league->addBot($bot);
+
+            $bot = $this->botGenerator->generate($this->league, $type);
+
+            $amount++;
         }
     }
 
-    protected function isValid(Bot $bot)
+    protected function isValidLeague(Bot $bot)
     {
-        return true;
+        $exists = $this->league->getBots()->exists(function($key, $item) use ($bot) {
+            return $item->getTotalScore() == $bot->getTotalScore();
+        });
+
+        return !$exists;
     }
 }

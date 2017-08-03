@@ -41,6 +41,9 @@ class RosterController extends Controller
 
         try {
             $bot = $generator->generate($league);
+            $this->em->persist($bot);
+            $this->em->flush();
+
             $response = new JsonResponse();
 
             $response->setStatusCode(Response::HTTP_CREATED);

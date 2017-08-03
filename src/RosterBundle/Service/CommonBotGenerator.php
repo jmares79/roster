@@ -32,7 +32,7 @@ class CommonBotGenerator implements BotGeneratorInterface
         $bot->setType($type);
         $bot->setLeague($league);
 
-        $this->em->persist($bot);
+        return $bot;
     }
 
     protected function generateAttributes(Bot $bot)
