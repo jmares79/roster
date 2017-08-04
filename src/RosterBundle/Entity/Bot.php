@@ -3,6 +3,8 @@
 namespace RosterBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use RosterBundle\Entity\League;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="RosterBundle\Repository\BotRepository")
  * @UniqueEntity("totalScore")
  * @UniqueEntity("name")
+ *
+ * @ExclusionPolicy("all")
  */
 class Bot
 {
@@ -29,6 +33,7 @@ class Bot
     /**
      * @ORM\ManyToOne(targetEntity="League", inversedBy="bots")
      * @ORM\JoinColumn(name="league_id", referencedColumnName="id")
+     *
      */
     private $league;
 
@@ -36,6 +41,8 @@ class Bot
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
+     *
+     * @Expose
      */
     private $name;
 
@@ -43,6 +50,8 @@ class Bot
      * @var float
      *
      * @ORM\Column(name="speed", type="float")
+     *
+     * @Expose
      */
     private $speed;
 
@@ -50,6 +59,8 @@ class Bot
      * @var float
      *
      * @ORM\Column(name="strength", type="float")
+     *
+     * @Expose
      */
     private $strength;
 
@@ -57,6 +68,8 @@ class Bot
      * @var float
      *
      * @ORM\Column(name="agility", type="float")
+     *
+     * @Expose
      */
     private $agility;
 
@@ -64,6 +77,8 @@ class Bot
      * @var float
      *
      * @ORM\Column(name="totalScore", type="float")
+     *
+     * @Expose
      */
     private $totalScore;
 
@@ -71,6 +86,8 @@ class Bot
      * @var string
      *
      * @ORM\Column(name="type", type="string")
+     *
+     * @Expose
      */
     private $type;
 
