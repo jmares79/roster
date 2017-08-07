@@ -2,6 +2,8 @@
 
 namespace RosterBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -10,6 +12,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="league")
  * @ORM\Entity(repositoryClass="RosterBundle\Repository\LeagueRepository")
+ *
+ * @ExclusionPolicy("all")
  */
 class League
 {
@@ -26,11 +30,15 @@ class League
      * @var float
      *
      * @ORM\Column(name="salary", type="float")
+     *
+     * @Expose
      */
     private $salary;
 
     /**
      * @ORM\OneToMany(targetEntity="Bot", mappedBy="league")
+     *
+     * @Expose
      */
     private $bots;
 

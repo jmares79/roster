@@ -11,9 +11,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use RosterBundle\Exception\LeagueGenerationException;
 use RosterBundle\Exception\InvalidBotGenerationException;
 use RosterBundle\Service\CommonLeagueGenerator;
-use RosterBundle\Service\CommonTeamGenerator;
 use RosterBundle\Service\CommonBotGenerator;
+use JMS\SerializerBundle\JMSSerializerBundle;
 use RosterBundle\Entity\League;
+use RosterBundle\Entity\Bot;
 
 class RosterController extends Controller
 {
@@ -23,7 +24,14 @@ class RosterController extends Controller
      */
     public function getBotAction(Request $request, $id)
     {
-        die('BOT GET');
+        $em = $this->getDoctrine()->getManager();
+        $bot = $em->getRepository('RosterBundle:Bot')->findOneById($id);
+
+        if (null == $bot) { return new JsonResponse(array('bot' => $bot), Response::HTTP_NOT_FOUND); }
+
+        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+
+        return new Response(array('bot'=> $serializer->serialize($bot, 'json')), Response::HTTP_OK);
     }
 
     /**
@@ -63,7 +71,14 @@ class RosterController extends Controller
      */
     public function getLeagueAction(Request $request, $id)
     {
-        die('LEAGUE GET');
+        if (null == $id) { return new JsonResponse(array(), Response::HTTP_BAD_REQUEST); }
+
+        $repository = $this->getDoctrine()->getRepository(League::class);
+        $league = $repository->findOneById($leagueId);
+
+        if (null == $league) { return new JsonResponse(array(), Response::HTTP_NOT_FOUND); }
+
+        return new JsonResponse(array('data' => $league), Response::HTTP_OK);
     }
 
     /**
