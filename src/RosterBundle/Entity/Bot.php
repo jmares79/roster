@@ -34,6 +34,7 @@ class Bot
      * @ORM\ManyToOne(targetEntity="League", inversedBy="bots")
      * @ORM\JoinColumn(name="league_id", referencedColumnName="id")
      *
+     * @Expose
      */
     private $league;
 

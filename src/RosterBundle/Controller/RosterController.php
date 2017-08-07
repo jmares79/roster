@@ -74,13 +74,13 @@ class RosterController extends Controller
         if (null == $id) { return new JsonResponse(array(), Response::HTTP_BAD_REQUEST); }
 
         $repository = $this->getDoctrine()->getRepository(League::class);
-        $league = $repository->findOneById($leagueId);
+        $league = $repository->findOneById($id);
 
         if (null == $league) { return new JsonResponse(array(), Response::HTTP_NOT_FOUND); }
-
+        // dump($league->getBots());die;
         $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
 
-        return new Response(array('league'=> $serializer->serialize($league, 'json')), Response::HTTP_OK);
+        return new Response($serializer->serialize($league, 'json'), Response::HTTP_OK);
     }
 
     /**
