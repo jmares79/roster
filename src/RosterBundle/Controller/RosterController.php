@@ -78,7 +78,9 @@ class RosterController extends Controller
 
         if (null == $league) { return new JsonResponse(array(), Response::HTTP_NOT_FOUND); }
 
-        return new JsonResponse(array('data' => $league), Response::HTTP_OK);
+        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+
+        return new Response(array('league'=> $serializer->serialize($league, 'json')), Response::HTTP_OK);
     }
 
     /**
