@@ -24,6 +24,7 @@ class RosterControllerTest extends WebTestCase
     public function testGetBotAction($id, $status)
     {
         $this->client->request('GET', '/bot/'.$id);
+
         $r = $this->client->getResponse()->getContent();
         $response = json_decode($r, true);
 
@@ -38,5 +39,12 @@ class RosterControllerTest extends WebTestCase
         return array(
             array(self::VALID_ID, Response::HTTP_NOT_FOUND)
         );
+    }
+
+    public function testNewLeagueAction()
+    {
+        $this->client->request('POST', '/league');
+        $r = $this->client->getResponse();
+        dump($r);
     }
 }
