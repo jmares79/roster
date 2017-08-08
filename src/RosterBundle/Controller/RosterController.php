@@ -74,15 +74,18 @@ class RosterController extends Controller
         if (null == $id) { return new JsonResponse(array(), Response::HTTP_BAD_REQUEST); }
 
         $repository = $this->getDoctrine()->getRepository(League::class);
-        $league = $repository->findOneById($leagueId);
+        $league = $repository->findOneById($id);
 
         if (null == $league) { return new JsonResponse(array(), Response::HTTP_NOT_FOUND); }
 
-        return new JsonResponse(array('data' => $league), Response::HTTP_OK);
+        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+
+        return new Response($serializer->serialize($league, 'json'), Response::HTTP_OK);
     }
 
     /**
      * Generates a new valid league, that will be neccesary to hold a team
+     *
      * @Route("/league")
      * @Method({"POST"})
      */

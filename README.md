@@ -15,7 +15,6 @@ The league has also implemented a salary cap. Each team's roster can not exceed 
 
 > The salary calculation was not explicit in the exercise description. For now, it's not being checked or validated against. After the deployment to a production server, it will be added for completion, if needed/asked.
 
-
 ## Structure of the project
 
 The main structure is obviously based in the one provided by Symfony, using the internal development server provided by PHP and powered by MySQL DBMS.
