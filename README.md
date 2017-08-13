@@ -1,22 +1,19 @@
 # Roster Bots
 
-This project is based on the code challenge provided as a test for a remote Sr PHP dev position.
-It consists of a REST API crated with the [Symfony framework](https://symfony.com/)
+This project is based on the code challenge provided as a test for a Sr PHP dev position.
+It consists in a REST API created with the [Symfony framework](https://symfony.com/)
 
-## Objective
+## Goal
 
-Develop the a game called Roster Bots. It consists of create a league of sport bots team. Each one have  attribute scores (Speed, Strength, Agility) loaded in points.
+Develop a game called Roster Bots. It consists of creating a league of sport bots team. Each one has attribute to create the score (Speed, Strength, Agility) loaded with points.
 
-The total sum of the speed, strength, and agility attributes is calculated as the "total attribute score" for each
-player bot.
+The total sum of the speed, strength, and agility attributes are calculated as the "total attribute score" for each player bot.
 
-The league has mandated that the total attribute score of each of your player bots can not exceed 100 points,
-and no two players can have the same score, otherwise your team is disqualified from league play.
+The league has a restriction that the total attribute score of each player bots can not exceed 100 points. Furthermore, two players can´t have the same score, otherwise your team is disqualified from the league to play.
 
 The league has also implemented a salary cap. Each team's roster can not exceed 175 points.
 
-> The salary calculation was not explicit in the exercise description. For now, it's now being checked. After the deployment to a production server, it will be added for completion
-
+> The salary calculation was not explicit in the exercise description. For now, it's not being checked or validated against. After the deployment to a production server, it will be added for completion, if needed/asked.
 
 ## Structure of the project
 

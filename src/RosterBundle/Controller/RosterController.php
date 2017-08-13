@@ -40,7 +40,7 @@ class RosterController extends Controller
      */
     public function newBotAction(Request $request, CommonBotGenerator $generator, $leagueId)
     {
-        if (null == $leagueId) { return new JsonResponse(array(), Response::HTTP_BAD_REQUEST); }
+        if (null == $leagueId) { return new JsonResponse(array(), Response::HTTP_NOT_FOUND); }
 
         $repository = $this->getDoctrine()->getRepository(League::class);
         $league = $repository->findOneById($leagueId);
@@ -100,10 +100,12 @@ class RosterController extends Controller
             $response->headers->set('Location',
                 $this->generateUrl('get_league', array('id' => $league->getId()), true)
             );
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Expose-Headers', 'location');
 
             return $response;
         } catch (LeagueGenerationException $e) {
-            return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
 }
