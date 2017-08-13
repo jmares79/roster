@@ -100,10 +100,12 @@ class RosterController extends Controller
             $response->headers->set('Location',
                 $this->generateUrl('get_league', array('id' => $league->getId()), true)
             );
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Expose-Headers', 'location');
 
             return $response;
         } catch (LeagueGenerationException $e) {
-            return new JsonResponse($e->getMessage, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
 }
