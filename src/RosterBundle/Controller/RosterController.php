@@ -108,4 +108,24 @@ class RosterController extends Controller
             return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
+
+    /**
+     * Gets all the leagues
+     *
+     * @Route("/leagues")
+     * @Method({"GET"})
+     */
+    public function getLeaguesAction(Request $request)
+    {
+        $leagues = $this->getDoctrine()->getRepository('RosterBundle:League')->findAll();
+        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+
+        $response = new JsonResponse();
+
+        $response->setStatusCode(Response::HTTP_OK);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setContent($serializer->serialize($leagues, 'json'));
+
+        return $response;
+    }
 }
